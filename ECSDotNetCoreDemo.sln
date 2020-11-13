@@ -1,0 +1,17 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECSDotNetCoreDemo", "ECSDotNetCoreDemo\ECSDotNetCoreDemo.csproj", "{BBF5BE60-B196-4F4B-80BB-652FEF465921}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BBF5BE60-B196-4F4B-80BB-652FEF465921}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBF5BE60-B196-4F4B-80BB-652FEF465921}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBF5BE60-B196-4F4B-80BB-652FEF465921}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBF5BE60-B196-4F4B-80BB-652FEF465921}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
