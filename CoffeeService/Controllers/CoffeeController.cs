@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
@@ -12,8 +13,8 @@ public class CoffeeController : ControllerBase
     }
 
     [HttpGet]
-    public List<Coffee> GetAll()
+    public async Task<List<Coffee>> GetAll()
     {
-        return _coffeeService.GetAll();
+        return await _coffeeService.GetAll();
     }
 }

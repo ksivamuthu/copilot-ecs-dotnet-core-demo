@@ -1,0 +1,66 @@
+Parameters:
+  App:
+    Type: String
+    Description: Your application's name.
+  Env:
+    Type: String
+    Description: The environment name your service, job, or workflow is being deployed to.
+  Name:
+    Type: String
+    Description: The name of the service, job, or workflow being deployed.
+Resources:
+  Coffee:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    Properties:
+      TableName: !Sub ${App}-${Env}-${Name}-Coffee
+      AttributeDefinitions:
+        - AttributeName: CoffeeId
+          AttributeType: "S"
+        - AttributeName: CoffeeName
+          AttributeType: "S"
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: CoffeeId
+          KeyType: HASH
+        - AttributeName: CoffeeName
+          KeyType: RANGE
+
+  CoffeeAccessPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: !Sub
+        - Grants CRUD access to the Dynamo DB table ${Table}
+        - { Table: !Ref Coffee }
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: DDBActions
+            Effect: Allow
+            Action:
+              - dynamodb:BatchGet*
+              - dynamodb:DescribeStream
+              - dynamodb:DescribeTable
+              - dynamodb:Get*
+              - dynamodb:Query
+              - dynamodb:Scan
+              - dynamodb:BatchWrite*
+              - dynamodb:Create*
+              - dynamodb:Delete*
+              - dynamodb:Update*
+              - dynamodb:PutItem
+            Resource: !Sub ${ Coffee.Arn}
+          - Sid: DDBLSIActions
+            Action:
+              - dynamodb:Query
+              - dynamodb:Scan
+            Effect: Allow
+            Resource: !Sub ${ Coffee.Arn}/Index/*
+
+Outputs:
+  CoffeeName:
+    Description: "The name of this DynamoDB."
+    Value: !Ref Coffee
+  CoffeeAccessPolicy:
+    Description: "The IAM::ManagedPolicy to attach to the task role."
+    Value: !Ref CoffeeAccessPolicy

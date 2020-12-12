@@ -15,7 +15,7 @@ source:
   # has the following properties: repository, branch.
   properties:
     access_token_secret: github-token-awscopilotcoffeecafe-copilot-ecs-dotnet-core-demo
-    branch: part-2
+    branch: part-3
     repository: https://github.com/ksivamuthu/copilot-ecs-dotnet-core-demo
 
 # The deployment section defines the order the pipeline will deploy

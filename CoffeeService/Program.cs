@@ -1,3 +1,6 @@
+using System;
+using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -14,6 +17,12 @@ WebHost.CreateDefaultBuilder(args)
 
 void ConfigureServices(IServiceCollection services)
 { 
+     var config = new DynamoDBContextConfig  { 
+        TableNamePrefix = $"{Environment.GetEnvironmentVariable("COPILOT_APPLICATION_NAME")}-{Environment.GetEnvironmentVariable("COPILOT_ENVIRONMENT_NAME")}-{Environment.GetEnvironmentVariable("COPILOT_SERVICE_NAME")}-"
+    };
+    services.AddAWSService<IAmazonDynamoDB>();
+    services.AddTransient<IDynamoDBContext>(c => new DynamoDBContext(c.GetService<IAmazonDynamoDB>(), config));
+ 
     services.AddSingleton<CoffeeService>();   
     services.AddControllers();
     services.AddHealthChecks();
