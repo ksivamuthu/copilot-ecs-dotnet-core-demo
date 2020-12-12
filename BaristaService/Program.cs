@@ -1,26 +1,53 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
-namespace BaristaService
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+WebHost.CreateDefaultBuilder(args)
+    .ConfigureServices(ConfigureServices)
+    .Configure(ConfigureApp)
+    .Build()
+    .Run();
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
+void ConfigureServices(IServiceCollection services)
+{ 
+     var config = new DynamoDBContextConfig  { 
+        TableNamePrefix = $"{Environment.GetEnvironmentVariable("COPILOT_APPLICATION_NAME")}-{Environment.GetEnvironmentVariable("COPILOT_ENVIRONMENT_NAME")}-{Environment.GetEnvironmentVariable("COPILOT_SERVICE_NAME")}-"
+    };
+    services.AddAWSService<IAmazonDynamoDB>();
+    services.AddTransient<IDynamoDBContext>(c => new DynamoDBContext(c.GetService<IAmazonDynamoDB>(), config));
+ 
+    services.AddSingleton<BaristaService>();   
+    services.AddControllers();
+    services.AddHealthChecks();
+    services.AddCors(options =>
+        {           
+            options.AddDefaultPolicy(
+                builder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    builder.WithOrigins("http://localhost:3000")
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();                                        
                 });
-    }
+        });
+}
+
+void ConfigureApp(IApplicationBuilder app)
+{
+    app.UsePathBase(new PathString("/barista-service"));
+    
+    app.UseForwardedHeaders();
+    app.UseRouting();
+    app.UseCors();
+    app.UseEndpoints(e => {
+        e.MapGet("/", c => c.Response.WriteAsync("I'm barista service!"));
+        e.MapHealthChecks("/healthz", new HealthCheckOptions());
+        e.MapControllers();
+    });
 }
