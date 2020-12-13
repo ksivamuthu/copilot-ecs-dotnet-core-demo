@@ -9,25 +9,25 @@ Parameters:
     Type: String
     Description: The name of the service, job, or workflow being deployed.
 Resources:
-  Coffee:
+  Order:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
     Properties:
-      TableName: !Sub ${App}-${Env}-${Name}-Coffee
+      TableName: !Sub ${App}-${Env}-${Name}-Order
       AttributeDefinitions:
-        - AttributeName: CoffeeId
+        - AttributeName: OrderId
           AttributeType: "S"
       BillingMode: PAY_PER_REQUEST
       KeySchema:
-        - AttributeName: CoffeeId
+        - AttributeName: OrderId
           KeyType: HASH
 
-  CoffeeAccessPolicy:
+  OrderAccessPolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
       Description: !Sub
         - Grants CRUD access to the Dynamo DB table ${Table}
-        - { Table: !Ref Coffee }
+        - { Table: !Ref Order }
       PolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -45,18 +45,18 @@ Resources:
               - dynamodb:Delete*
               - dynamodb:Update*
               - dynamodb:PutItem
-            Resource: !Sub ${ Coffee.Arn}
+            Resource: !Sub ${ Order.Arn}
           - Sid: DDBLSIActions
             Action:
               - dynamodb:Query
               - dynamodb:Scan
             Effect: Allow
-            Resource: !Sub ${ Coffee.Arn}/Index/*
+            Resource: !Sub ${ Order.Arn}/Index/*
 
 Outputs:
-  CoffeeName:
+  OrderName:
     Description: "The name of this DynamoDB."
-    Value: !Ref Coffee
-  CoffeeAccessPolicy:
+    Value: !Ref Order
+  OrderAccessPolicy:
     Description: "The IAM::ManagedPolicy to attach to the task role."
-    Value: !Ref CoffeeAccessPolicy
+    Value: !Ref OrderAccessPolicy

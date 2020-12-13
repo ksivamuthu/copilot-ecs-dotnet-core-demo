@@ -11,4 +11,9 @@ public class OrderService
         await _context.SaveAsync(order);
         return await _context.LoadAsync<Order>(order.OrderId, new DynamoDBContextConfig { ConsistentRead = true });
     }
+
+    public async Task<Order> GetById(string orderId) 
+    {
+        return await _context.LoadAsync<Order>(orderId);
+    }
 }
