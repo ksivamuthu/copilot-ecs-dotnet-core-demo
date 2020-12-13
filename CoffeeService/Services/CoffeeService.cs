@@ -22,14 +22,14 @@ public class CoffeeService
 
     public async Task<Coffee> Create(Coffee coffee) {
         await _context.SaveAsync(coffee);
-        return await _context.LoadAsync<Coffee>(coffee.CoffeeId, new DynamoDBContextConfig { ConsistentRead = true });
+        return await _context.LoadAsync<Coffee>(coffee.CoffeeId);
     }
 
     public  async Task<Coffee> Update(string coffeeId, Coffee coffee) {
        var retrievedCoffee = await this._context.LoadAsync<Coffee>(coffeeId);        
        retrievedCoffee.CoffeeName = coffee.CoffeeName;
        await _context.SaveAsync(retrievedCoffee);
-       return await _context.LoadAsync<Coffee>(coffeeId, new DynamoDBContextConfig { ConsistentRead = true });
+       return await _context.LoadAsync<Coffee>(coffeeId);
     }
 
     public  async Task Delete(string coffeeId) {
