@@ -26,6 +26,7 @@ public class OrderService
                 }
             }
         });
+
         return await _context.LoadAsync<Order>(order.OrderId, new DynamoDBContextConfig { ConsistentRead = true });
     }
 
