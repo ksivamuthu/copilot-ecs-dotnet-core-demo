@@ -53,6 +53,11 @@ Resources:
             Effect: Allow
             Resource: !Sub ${ Order.Arn}/Index/*
 
+  OrderEventBus:
+    Type: 'AWS::Events::EventBus'
+    Properties: 
+      Name: !Sub ${App}-${Env}-OrderEventBus
+
 Outputs:
   OrderName:
     Description: "The name of this DynamoDB."

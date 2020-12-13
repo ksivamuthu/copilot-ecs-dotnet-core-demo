@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Amazon.EventBridge;
 
 WebHost.CreateDefaultBuilder(args)
     .ConfigureServices(ConfigureServices)
@@ -23,6 +24,9 @@ void ConfigureServices(IServiceCollection services)
     services.AddAWSService<IAmazonDynamoDB>();
     services.AddTransient<IDynamoDBContext>(c => new DynamoDBContext(c.GetService<IAmazonDynamoDB>(), config));
  
+    services.AddAWSService<IAmazonEventBridge>();
+    services.AddSingleton<EventBusConfig>(c => new EventBusConfig(){ EventBusName =  $"{Environment.GetEnvironmentVariable("COPILOT_APPLICATION_NAME")}-{Environment.GetEnvironmentVariable("COPILOT_ENVIRONMENT_NAME")}-OrderEventBus"});
+
     services.AddSingleton<OrderService>();   
     services.AddControllers();
     services.AddHealthChecks();
@@ -50,4 +54,9 @@ void ConfigureApp(IApplicationBuilder app)
         e.MapHealthChecks("/healthz", new HealthCheckOptions());
         e.MapControllers();
     });
+}
+
+public class EventBusConfig 
+{
+    public string EventBusName { get; set; }
 }
