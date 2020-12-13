@@ -58,6 +58,21 @@ Resources:
     Properties: 
       Name: !Sub ${App}-${Env}-OrderEventBus
 
+  OrderEventBusAccessPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: !Sub
+        - Grants Push access to the EventBus ${OrderEventBus}
+        - { EventBus: !Ref OrderEventBus }
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: EventBusActions
+            Effect: Allow
+            Action:
+              - events:PutEvents
+            Resource: !Sub ${ OrderEventBus.Arn}
+
 Outputs:
   OrderName:
     Description: "The name of this DynamoDB."
@@ -65,3 +80,6 @@ Outputs:
   OrderAccessPolicy:
     Description: "The IAM::ManagedPolicy to attach to the task role."
     Value: !Ref OrderAccessPolicy
+  OrderEventBusAccessPolicy:
+    Description: "The IAM::ManagedPolicy to attach to the task role."
+    Value: !Ref OrderEventBusAccessPolicy
