@@ -17,4 +17,10 @@ public class CoffeeController : ControllerBase
     {
         return await _coffeeService.GetAll();
     }
+
+    [HttpPost]
+    public async Task<Coffee> Create([FromBody] Coffee coffee)
+    {
+        return await _coffeeService.Create(coffee);
+    }
 }
