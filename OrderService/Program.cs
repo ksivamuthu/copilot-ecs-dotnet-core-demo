@@ -44,6 +44,7 @@ void ConfigureServices(IServiceCollection services)
 
 void ConfigureApp(IApplicationBuilder app)
 {
+    app.UseDeveloperExceptionPage();
     app.UsePathBase(new PathString("/order-service"));
     
     app.UseForwardedHeaders();
