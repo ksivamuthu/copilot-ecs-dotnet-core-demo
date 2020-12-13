@@ -6,5 +6,6 @@ public class Coffee
     [DynamoDBHashKey]
     public string CoffeeId { get; set; }
 
+    [DynamoDBRangeKey] //Sort key
     public string CoffeeName { get; set; }
 }
