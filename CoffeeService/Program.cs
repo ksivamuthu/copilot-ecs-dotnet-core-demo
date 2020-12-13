@@ -24,7 +24,7 @@ void ConfigureServices(IServiceCollection services)
         TableNamePrefix = $"{Environment.GetEnvironmentVariable("COPILOT_APPLICATION_NAME")}-{Environment.GetEnvironmentVariable("COPILOT_ENVIRONMENT_NAME")}-{Environment.GetEnvironmentVariable("COPILOT_SERVICE_NAME")}-"
     };
     services.AddAWSService<IAmazonDynamoDB>();
-    services.AddTransient<IDynamoDBContext>(c => new DynamoDBContext(c.GetService<IAmazonDynamoDB>(), config));
+    services.AddTransient<DynamoDBContext>(c => new DynamoDBContext(c.GetService<IAmazonDynamoDB>(), config));
  
     services.AddSingleton<CoffeeService>();   
     services.AddControllers();

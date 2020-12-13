@@ -4,8 +4,8 @@ using Amazon.DynamoDBv2.DataModel;
 
 public class CoffeeService
 {
-    private readonly IDynamoDBContext _context;
-    public CoffeeService(IDynamoDBContext context) {
+    private readonly DynamoDBContext _context;
+    public CoffeeService(DynamoDBContext context) {
         _context = context;
     }
 
