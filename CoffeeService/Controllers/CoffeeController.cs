@@ -18,6 +18,13 @@ public class CoffeeController : ControllerBase
         return await _coffeeService.GetAll();
     }
 
+    [HttpGet]
+    [Route("{coffeeId}")]
+    public async Task<Coffee> GetById(string coffeeId)
+    {
+        return await _coffeeService.GetById(coffeeId);
+    }
+
     [HttpPost]
     public async Task<Coffee> Create([FromBody] Coffee coffee)
     {
