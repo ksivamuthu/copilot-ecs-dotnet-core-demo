@@ -73,6 +73,7 @@ void ConfigureApp(IApplicationBuilder app)
     SeedData(app.ApplicationServices.GetService<CoffeeService>());
 
     app.UsePathBase(new PathString("/coffee-service"));
+    app.UseDeveloperExceptionPage();
     
     app.UseForwardedHeaders();
     app.UseRouting();
