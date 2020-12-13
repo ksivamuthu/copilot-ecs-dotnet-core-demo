@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Microsoft.AspNetCore;
@@ -38,8 +41,37 @@ void ConfigureServices(IServiceCollection services)
         });
 }
 
-void ConfigureApp(IApplicationBuilder app)
+void SeedData(CoffeeService coffeeService)
 {
+    var coffees = new List<Coffee> {
+        new Coffee() { CoffeeId = "cappucino", CoffeeName = "Cappucino" },
+        new Coffee() { CoffeeId = "latte", CoffeeName = "Latte" },
+        new Coffee() { CoffeeId = "mocha", CoffeeName = "Mocha" },
+        new Coffee() { CoffeeId = "americano", CoffeeName = "Americano" },
+        new Coffee() { CoffeeId = "macchiato", CoffeeName = "Macchiato" },
+        new Coffee() { CoffeeId = "frappe", CoffeeName = "Frappe" },
+        new Coffee() { CoffeeId = "corretto", CoffeeName = "Corretto" },
+        new Coffee() { CoffeeId = "affogato", CoffeeName = "Affogato" },
+        new Coffee() { CoffeeId = "filtercoffee", CoffeeName = "Filter Coffee" },
+    };
+
+    
+    Task.Run(async () => {
+        var existingCoffees = await coffeeService.GetAll();
+        if(existingCoffees != null && existingCoffees.Count() > 0) {
+            return;
+        }
+        foreach (var coffee in coffees)
+        {
+            await coffeeService.Create(coffee);    
+        }        
+    }).Wait();
+}
+
+void ConfigureApp(IApplicationBuilder app, CoffeeService coffeeService)
+{
+    SeedData(coffeeService);
+
     app.UsePathBase(new PathString("/coffee-service"));
     
     app.UseForwardedHeaders();
