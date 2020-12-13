@@ -23,9 +23,7 @@ Resources:
       KeySchema:
         - AttributeName: CoffeeId
           KeyType: HASH
-        - AttributeName: CoffeeName
-          KeyType: RANGE
-
+          
   CoffeeAccessPolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
