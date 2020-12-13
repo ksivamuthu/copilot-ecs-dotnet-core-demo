@@ -68,9 +68,9 @@ void SeedData(CoffeeService coffeeService)
     }).Wait();
 }
 
-void ConfigureApp(IApplicationBuilder app, CoffeeService coffeeService)
+void ConfigureApp(IApplicationBuilder app)
 {
-    SeedData(coffeeService);
+    SeedData(app.ApplicationServices.GetService<CoffeeService>());
 
     app.UsePathBase(new PathString("/coffee-service"));
     
